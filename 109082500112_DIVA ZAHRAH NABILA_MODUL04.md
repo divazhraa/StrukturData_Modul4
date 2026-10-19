@@ -422,7 +422,7 @@ int main()
 }
 ```
 ### Output :
-![Screenshot Output](https://github.com/divazhraa/StrukturData_Modul4/raw/main/Modul04/output/OUTPUT1.png)
+![Screenshot Output Unguided 1_!] (https://github.com/divazhraa/StrukturData_Modul4/blob/main/Modul04/output/OUTPUT1.png)
 
 
 ### penjelasan
