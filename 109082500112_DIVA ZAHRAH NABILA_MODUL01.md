@@ -1,91 +1,232 @@
-# <h1 align="center">Laporan Praktikum Modul 3 - ABSTRACT DATA TYPE (ADT)- ... </h1>
+# <h1 align="center">Laporan Praktikum Modul 4 -SINGLY LINKED LIST (BAGIAN PERTAMA)- ... </h1>
 <p align="center">[Diva Zahrah Nabila] - [109082500112]</p>
 
 ## Unguided 
 
-# Dasar Teori
-## A.	Abstract Data Type (ADT)
-###     Abstract Data Type (ADT) adalah definisi statik yang mencakup sebuah tipe data (TYPE) beserta sekumpulan operasi dasar atau primitif yang dapat memanipulasi tipe data tersebut. ADT yang terstruktur dan lengkap biasanya juga menyertakan definisi invarian dari tipe dan aksioma-aksioma terkait. Sebuah definisi ADT dapat bersifat kompleks, artinya di dalamnya dapat memuat definisi dari ADT lain (contohnya, ADT SEGI4 dapat dibentuk dari dua buah ADT POINT).
-
-## B.	Implementasi Modular pada ADT
-###     Dalam standar software engineering, ADT diimplementasikan menggunakan arsitektur modular yang memecah program menjadi tiga file utama, yaitu:
-###     1. Berkas Header (.h): Memuat deklarasi atau spesifikasi tipe struct serta bentuk prototipe (header) dari primitif (fungsi dan prosedur) tanpa menjabarkan isi prosesnya.   
-###     2. Berkas Body/Realisasi (.cpp): Memuat implementasi kode murni (body) dari primitif fungsi/prosedur yang telah dideklarasikan di bagian header.   
-###     3. Berkas Program Utama/Driver (main.cpp): Merupakan antarmuka utama program yang dipanggil oleh sistem (memuat fungsi int main()) untuk menggunakan tipe data bentukan tersebut.
-
-
-
 # GUIDED 1
+### list.h
 ### Source code: 
 
 ```cpp
+#ifndef List_h
+#define List_h
+#define Nil NULL
+
 #include <iostream>
 using namespace std;
-struct mahasiswa
-{
-    char nim[10];
-    int nilai1, nilai2;
+
+struct mahasiswa{
+    string nama, nim;
+    int umur;
 };
-void inputMhs(mahasiswa &m);
-float rata2(mahasiswa m);
-int main()
-{
-    mahasiswa mhs;
-    inputMhs(mhs);
-    cout << "rata - rata = " << rata2(mhs);
-    return 0;
-}
-void inputMhs(mahasiswa &m)
-{
-    cout << "input nama = ";
-    cin >> m.nim;
-    cout << "input nilai = ";
-    cin >> m.nilai1;
-    cout << "input nilai2 = ";
-    cin >> m.nilai2;
-}
-float rata2(mahasiswa m)
-{
-    return float(m.nilai1 + m.nilai2) / 2;
-}
+
+typedef mahasiswa dataMahasiswa;
+typedef struct node *address;
+
+struct node{
+    dataMahasiswa isidata;
+    address next;
+};
+
+struct linkedlist{
+    address first;
+};
+
+bool isEmpty(linkedlist List);
+void createList(linkedlist &List);
+address alokasi(string nama, string nim, int umur);
+void dealokasi(address &node);
+void printList(linkedlist list);
+void insertFirst(linkedlist &list, address nodeBaru);
+void insertAfter(linkedlist &list, address nodeBaru, address prev);
+void insertLast(linkedlist &list, address nodeBaru);
+
+void delFirst(linkedlist &List);
+void delLast(linkedlist &List);
+void delAfter(linkedlist &List, address nodeHapus, address nodePrev);
+int nbList(linkedlist List);
+void deleteList(linkedlist &List);
+#endif
 ``` 
 
-### Penjelasan: Program ini menggunakan tipe data bentukan (struct) bernama mahasiswa untuk mengelompokkan data secara rapi, yaitu NIM, nilai 1, dan nilai 2. Seluruh kode pada program ini ditulis di dalam satu file tunggal. Di dalamnya terdapat dua fungsi pendukung: prosedur inputMhs() yang bertugas meminta pengguna memasukkan data, dan fungsi rata2() untuk menghitung nilai rata-rata dari kedua nilai tersebut. Fungsi main() kemudian akan memanggil kedua fungsi itu secara berurutan agar hasilnya bisa tampil di layar.
+### Penjelasan: File header ini berisi deklarasi struktur data dan daftar fungsi yang dipakai program. Struct mahasiswa menyimpan data nama, NIM, dan umur, lalu node membungkus data tersebut bersama pointer next yang menunjuk ke node berikutnya. Struct linkedlist hanya berisi pointer first sebagai penunjuk node pertama. Nil didefinisikan sebagai NULL agar penulisan pointer kosong lebih mudah dibaca. Bagian #ifndef ... #endif mencegah header terbaca dua kali saat kompilasi.
 
 
 
-### GUIDED 2	
+### List.cpp
 ### Source code: 
 
-### mahasiswa.h
 ```cpp
-#ifndef MAHASISWA_H_INCLUDED
-#define MAHASISWA_H_INCLUDED
-struct mahasiswa
-{
-    char nim[10];
-    int nilai1, nilai2;
-};
-void inputMhs(mahasiswa &m);
-float rata2(mahasiswa m);
-#endif
-```
-### mahasiswa.cpp
-```cpp
+#include "list.h"
 #include <iostream>
-#include "mahasiswa.h"
 using namespace std;
-void inputMhs(mahasiswa &m){
-    cout << "input nama = ";
-    cin >> (m).nim;
-    cout << "input nilai =";
-    cin >> (m).nilai1;
-    cout << "input nilai2 = ";
-    cin >> (m).nilai2;
-}
-float rata2(mahasiswa m)
+
+bool isEmpty(linkedlist List)
 {
-    return float(m.nilai1 + m.nilai2) / 2;
+    return List.first == Nil;
+}
+
+void createList(linkedlist &List)
+{
+    List.first = Nil;
+}
+
+address alokasi(string nama, string nim, int umur)
+{
+    address nodeBaru = new node;
+    nodeBaru->isidata.nama = nama;
+    nodeBaru->isidata.nim = nim;
+    nodeBaru->isidata.umur = umur;
+    nodeBaru->next = Nil;
+    return nodeBaru;
+}
+
+void dealokasi(address &node)
+{
+    node->next = Nil;
+    delete node;
+    node = Nil;
+}
+
+void insertFirst(linkedlist &List, address nodeBaru)
+{
+    nodeBaru->next = List.first;
+    List.first = nodeBaru;
+}
+
+void insertAfter(linkedlist &List, address nodeBaru, address Prev)
+{
+    if (Prev != Nil)
+    {
+        nodeBaru->next = Prev->next;
+        Prev->next = nodeBaru;
+    }
+}
+
+void insertLast(linkedlist &List, address nodeBaru)
+{
+    if (isEmpty(List))
+    {
+        List.first = nodeBaru;
+    }
+    else
+    {
+        address nodeBantu = List.first;
+        while (nodeBantu->next != Nil)
+        {
+            nodeBantu = nodeBantu->next;
+        }
+        nodeBantu->next = nodeBaru;
+    }
+}
+
+void delFirst(linkedlist &List)
+{
+    if (!isEmpty(List))
+    {
+        address nodeHapus = List.first; 
+        List.first = List.first->next;
+        nodeHapus->next = Nil;
+        dealokasi(nodeHapus);
+    }
+    else
+    {
+        cout << "List kosong!" << endl;
+    }
+}
+
+void delLast(linkedlist &List)
+{
+    address nodeHapus, nodePrev = Nil;
+    if (!isEmpty(List))
+    {
+        nodeHapus = List.first;
+        if (nodeHapus->next == Nil)
+        {
+            List.first = Nil;
+            dealokasi(nodeHapus);
+        }
+        else
+        {
+            while (nodeHapus->next != Nil)
+            {
+                nodePrev = nodeHapus;
+                nodeHapus = nodeHapus->next;
+            }
+            nodePrev->next = Nil;
+            dealokasi(nodeHapus);
+        }
+    }
+    else
+    {
+        cout << "List kosong!" << endl;
+    }
+}
+
+void delAfter(linkedlist &List, address nodeHapus, address nodePrev)
+{
+    if (isEmpty(List))
+    {
+        cout << "List kosong!" << endl;
+    }
+    else
+    {
+        if (nodePrev != Nil && nodePrev->next != Nil)
+        {
+            nodeHapus = nodePrev->next;
+            nodePrev->next = nodeHapus->next; 
+            nodeHapus->next = Nil;
+            dealokasi(nodeHapus);
+        }
+        else
+        {
+            cout << "Node sebelumnya (prev) tidak valid!" << endl;
+        }
+    }
+}
+
+void printList(linkedlist list)
+{
+    if (isEmpty(list))
+    {
+        cout << "List kosong!" << endl;
+    }
+    else
+    {
+        address nodeBantu = list.first;
+        while (nodeBantu != Nil)
+        {
+            cout << "Nama: " << nodeBantu->isidata.nama
+                 << ", NIM: " << nodeBantu->isidata.nim
+                 << ", Usia: " << nodeBantu->isidata.umur << endl;
+            nodeBantu = nodeBantu->next;
+        }
+    }
+}
+
+int nbList(linkedlist List)
+{
+    int count = 0;
+    address nodeBantu = List.first;
+    while (nodeBantu != Nil)
+    {
+        count++;
+        nodeBantu = nodeBantu->next;
+    }
+    return count;
+}
+
+void deleteList(linkedlist &List)
+{ 
+    address nodeBantu = List.first;
+    while (nodeBantu != Nil)
+    {
+        address nodeHapus = nodeBantu;
+        nodeBantu = nodeBantu->next;
+        dealokasi(nodeHapus);
+    }
+    List.first = Nil;
+    cout << "List sudah terhapus." << endl;
 }
 ```
 ### guided2.main.cpp
@@ -101,205 +242,183 @@ int main(){
 }
 ```
 
-### Penjelasan: Program ini adalah contoh penerapan Abstract Data Type (ADT) di mana satu program sengaja dipecah menjadi tiga file. File mahasiswa.h berfungsi sebagai kerangka dasar untuk mengenalkan nama tipe data dan fungsi. File mahasiswa.cpp berisi isi atau logika cara kerja dari fungsi-fungsi tersebut. Terakhir, file guided2.cpp adalah program utamanya yang bertugas memanggil file-file tadi agar hasilnya bisa tampil di layar.
+### Penjelasan: File list.cpp berisi implementasi semua operasi pada linked list. Fungsi isEmpty dan createList memeriksa dan menginisialisasi list kosong, sedangkan alokasi membuat node baru dengan new dan dealokasi menghapusnya dengan delete. Untuk penyisipan, insertFirst, insertAfter, dan insertLast menambahkan node di awal, setelah node tertentu, dan di akhir list dengan mengatur ulang pointer next. Untuk penghapusan, delFirst, delLast, dan delAfter melepas node dari awal, akhir, atau setelah node tertentu lalu membebaskan memorinya, dengan menyambungkan kembali pointer agar sisa list tidak terputus. Terakhir, printList menampilkan seluruh isi list, nbList menghitung jumlah node, dan deleteList menghapus semua node hingga list kembali kosong.
 
 
+### main.cpp
+### Source code: 
+
+```cpp
+#include "list.h"
+using namespace std;
+
+int main()
+{
+    linkedlist List;
+    address nodeA = Nil, nodeB = Nil, nodeC = Nil, nodeD = Nil, nodeE = Nil;
+    createList(List);
+
+    nodeA = alokasi("Dhimas", "2311102151", 20);
+    nodeB = alokasi("Arvin", "221110014", 21);
+    nodeC = alokasi("Rizal", "231110029", 20);
+    nodeD = alokasi("Satrio", "2211102173", 21);
+    nodeE = alokasi("Joshua", "2311102133", 21);
+
+    insertFirst(List, nodeA);
+    insertLast(List, nodeB);
+    insertAfter(List, nodeC, nodeA);
+    insertAfter(List, nodeD, nodeC);
+    insertLast(List, nodeE);
+
+    cout << "--- ISI LIST SETELAH DILAKUKAN INSERT ---" << endl;
+    printList(List);
+    cout << "jumlah node : " << nbList(List) << endl;
+    cout << endl;
+
+    delFirst(List);             
+    delLast(List);              
+    delAfter(List, Nil, nodeC); 
+
+    cout << "--- ISI LIST SETELAH DILAKUKAN DELETE ---" << endl;
+    printList(List);
+    cout << "jumlah node : " << nbList(List) << endl;
+    cout << endl;
+
+    deleteList(List); 
+    cout << "jumlah node : " << nbList(List) << endl;
+
+    return 0;
+}
+```
+
+### Penjelasan: Program utama membuat sebuah list kosong, lalu mengalokasikan lima node mahasiswa (Dhimas, Arvin, Rizal, Satrio, Joshua). Kelima node dimasukkan ke list menggunakan kombinasi insertFirst, insertLast, dan insertAfter, sehingga urutannya menjadi Dhimas, Rizal, Satrio, Arvin, Joshua. Isi list dan jumlah node dicetak untuk memastikan proses insert berhasil. Setelah itu program menjalankan delFirst, delLast, dan delAfter untuk menghapus node tertentu, mencetak ulang isi list, dan terakhir memanggil deleteList untuk membebaskan seluruh memori yang tersisa sebelum program selesai.
 
 
 # Unguided
-### 1. Buat program yang dapat menyimpan data mahasiswa (max. 10) ke dalam sebuah array dengan field nama, nim, uts, uas, tugas, dan nilai akhir. Nilai akhir diperoleh dari FUNGSI dengan rumus 0.3*uts+0.4*uas+0.3*tugas.
+### 1. Singlylist.h
 ```cpp
+#ifndef SINGLYLIST_H_INCLUDED
+#define SINGLYLIST_H_INCLUDED
+
 #include <iostream>
 using namespace std;
 
-struct Mahasiswa{
-    string nama, nim;
-    float uts, uas, tugas, nilai_akhir;
+#define Nil NULL
+
+typedef int infotype;
+typedef struct ElmList *address;
+
+struct ElmList{
+    infotype info;
+    address next;
 };
 
-float hitungNilaiAkhir(float uts, float uas, float tugas){
-    return (0.3 * uts) + (0.4 * uas) + (0.3 * tugas);
-}
-
-int main(){
-    Mahasiswa mhs[10]; 
-    int jumlah;
-    cout << "Masukkan jumlah mahasiswa (Maks 10): ";
-    cin >> jumlah;
-    if (jumlah > 10)
-        jumlah = 10;
-    for (int i = 0; i < jumlah; i++){
-        cout << "\nData Mahasiswa ke-" << i + 1 << endl;
-        cout << "Nama  : ";
-        cin >> mhs[i].nama;
-        cout << "NIM   : ";
-        cin >> mhs[i].nim;
-        cout << "UTS   : ";
-        cin >> mhs[i].uts;
-        cout << "UAS   : ";
-        cin >> mhs[i].uas;
-        cout << "Tugas : ";
-        cin >> mhs[i].tugas;
-        mhs[i].nilai_akhir = hitungNilaiAkhir(mhs[i].uts, mhs[i].uas, mhs[i].tugas);
-    }
-
-    cout << "\n=== HASIL REKAP NILAI MAHASISWA ===" << endl;
-    for (int i = 0; i < jumlah; i++){
-        cout << "Nama: " << mhs[i].nama << " | NIM: " << mhs[i].nim
-             << " | Nilai Akhir: " << mhs[i].nilai_akhir << endl;
-    }
-    return 0;
-}
-```
-### Output 1
-![Screenshot Output Unguided 1_!] (https://github.com/divazhraa/StrukturData_Modul3/blob/main/MODUL03/output/SOAL1.png)
-
-![Screenshot Output Unguided 1_!] (https://github.com/divazhraa/StrukturData_Modul3/blob/main/MODUL03/output/SOAL1(JAM).png)
-
-
-### penjelasan unguided 1
-[Program ini menggunakan tipe data array of struct untuk menyimpan data maksimal 10 mahasiswa. Rumus nilai dipisah ke dalam fungsi bernama hitungNilaiAkhir(). Fungsi ini mengambil nilai UTS, UAS, dan tugas, menghitung hasilnya, lalu menyimpan hasil hitungan tersebut langsung ke dalam data milik masing-masing mahasiswa.]
-
-
-### 2. Buatlah ADT pelajaran sebagai berikut di dalam file “pelajaran.h”:
-
-### pelajaran.h
-```cpp
-#ifndef PELAJARAN_H_INCLUDED
-#define PELAJARAN_H_INCLUDED
-#include <string>
-using namespace std;
-
-struct pelajaran{
-    string namaMapel;
-    string kodeMapel;
+struct List{
+    address First;
 };
-pelajaran create_pelajaran(string namapel, string kodepel);
-void tampil_pelajaran(pelajaran pel);
-#endif
+
+
+void createList(List &L);
+address alokasi(infotype x);
+void dealokasi(address &P);
+void printInfo(List L);
+void insertFirst(List &L, address P);
+
+#endif 
 ```
 
-### pelajaran.cpp
+### penjelasan singlylist.h 
+[File singlylist.h mendefinisikan struktur singly linked list sederhana yang setiap node-nya menyimpan satu data bertipe int (lewat alias infotype), dengan address sebagai pointer ke node ElmList yang berisi info dan pointer next, serta struct List yang hanya menyimpan pointer First sebagai penunjuk node pertama. Nil dipakai sebagai penanda pointer kosong, dan #ifndef ... #endif mencegah header terbaca dua kali. Header ini mendeklarasikan lima fungsi: createList untuk membuat list kosong, alokasi untuk membuat node baru, dealokasi untuk menghapus node dari memori, printInfo untuk menampilkan isi list, dan insertFirst untuk menyisipkan node di awal list. Karena hanya berisi deklarasi, header ini perlu dilengkapi file .cpp yang berisi definisi fungsinya, lalu dikompilasi bersama.]
+
+
+### 2. Singlylist.cpp
+
 ```cpp
 #include <iostream>
-#include "pelajaran.h"
-using namespace std;
-pelajaran create_pelajaran(string namapel, string kodepel){
-    pelajaran pel;
-    pel.namaMapel = namapel;
-    pel.kodeMapel = kodepel;
-    return pel;
-}
-
-void tampil_pelajaran(pelajaran pel){
-    cout << "nama pelajaran : " << pel.namaMapel << endl;
-    cout << "nilai : " << pel.kodeMapel << endl;
-}
-```
-
-### soal2.main.cpp
-```cpp
-#include <iostream>
-#include "pelajaran.h"
+#include "Singlylist.h"
 using namespace std;
 
-int main(){
-    string namapel = "Struktur Data";
-    string kodepel = "STD";
-    pelajaran pel = create_pelajaran(namapel, kodepel);
-    tampil_pelajaran(pel);
-
-    return 0;
+void createList(List &L){
+    L.First = Nil;
 }
-```
-### Output Unguided 2 :
-![Screenshot Output Unguided 1_!] (https://github.com/divazhraa/StrukturData_Modul3/blob/main/MODUL03/output/pelajaran.h.png)
 
-![Screenshot Output Unguided 1_!] (https://github.com/divazhraa/StrukturData_Modul3/blob/main/MODUL03/output/pelajaran.cpp.png)
+address alokasi(infotype x){
+    address P = new ElmList;
+    if (P != Nil){
+        P->info = x;
+        P->next = Nil;
+    }
+    return P;
+}
 
-![Screenshot Output Unguided 1_!] (https://github.com/divazhraa/StrukturData_Modul3/blob/main/MODUL03/output/SOAL2.png)
+void dealokasi(address &P){
+    delete P;
+    P = Nil;
+}
 
+void printInfo(List L){
+    address P = L.First;
+    while (P != Nil){
+        cout << P->info << " ";
+        P = P->next;
+    }
+    cout << endl;
+}
 
-
-### penjelasan unguided 2
-[Program ini adalah contoh penerapan Abstract Data Type (ADT) di mana satu program dipecah menjadi tiga file. File pelajaran.h berfungsi sebagai kerangka dasar untuk mengenalkan nama tipe data dan fungsi. File pelajaran.cpp berisi isi atau logika cara kerja dari fungsi-fungsi tersebut. Terakhir, file soal2.main.cpp adalah program utamanya yang bertugas memanggil file-file tadi agar hasilnya bisa tampil di layar.]
-
-### 3. Buatlah program dengan ketentuan :
-#### - 2 buah array 2D integer berukuran 3x3 dan 2 buah pointer integer
-#### - fungsi/prosedur yang menampilkan isi sebuah array integer 2D
-#### - fungsi/prosedur yang akan menukarkan isi dari 2 array integer 2D pada posisi tertentu
-#### - fungsi/prosedur yang akan menukarkan isi dari variabel yang ditunjuk oleh 2 buah pointer
-
-### source code unguided 3
-```cpp
-#include <iostream>
-using namespace std;
-
-void tampilArray(int arr[3][3]){
-    for (int i = 0; i < 3; i++){
-        for (int j = 0; j < 3; j++){
-            cout << arr[i][j] << " ";
-        }
-        cout << endl;
+void insertFirst(List &L, address P){
+    if (P != Nil){
+        P->next = L.First;
+        L.First = P;
     }
 }
+```
 
-void tukarIsiArray(int arr1[3][3], int arr2[3][3], int row, int col){
-    int temp = arr1[row][col];
-    arr1[row][col] = arr2[row][col];
-    arr2[row][col] = temp;
-}
+### penjelasan Singlylist.cpp
+[File singlylist.cpp ini berisi implementasi dari lima fungsi yang dideklarasikan di header. createList menginisialisasi list kosong dengan mengisi First dengan Nil, sedangkan alokasi membuat node baru menggunakan new, lalu mengisi info dengan nilai x dan next dengan Nil setelah memastikan alokasi berhasil (pointer tidak Nil). dealokasi membebaskan memori node dengan delete dan mengosongkan pointernya agar tidak menjadi dangling pointer. printInfo menelusuri list dari First sampai akhir sambil mencetak setiap info dipisahkan spasi, lalu mencetak baris baru (jika list kosong, hanya baris kosong yang tampil). Terakhir, insertFirst menyisipkan node di awal list dengan membuat next node baru menunjuk ke First lama, lalu menjadikan node tersebut sebagai First, dan hanya dijalankan jika node yang diberikan tidak Nil. Satu hal yang perlu diperhatikan: file ini meng-include "Singlylist.h" (huruf S besar), sehingga nama file headernya harus persis sama. Di Windows hal ini biasanya tidak bermasalah, tetapi di Linux atau macOS akan menimbulkan error No such file or directory jika nama filenya singlylist.h.]
 
-void tukarPointer(int *ptr1, int *ptr2){
-    int temp = *ptr1;
-    *ptr1 = *ptr2;
-    *ptr2 = temp;
-}
+### 3. Singlylist main.cpp
 
-int main(){
-    int array1[3][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
-    int array2[3][3] = {{9, 8, 7}, {6, 5, 4}, {3, 2, 1}};
+```cpp
+#include <iostream>
+#include "Singlylist.h"
+using namespace std;
 
-    int var1 = 15, var2 = 50;
-    int *p1 = &var1;
-    int *p2 = &var2;
+int main()
+{
+    List L;
+    address P1, P2, P3, P4, P5;
 
-    cout << "=== SEBELUM DITUKAR ===" << endl;
-    cout << "Array 1:" << endl;
-    tampilArray(array1);
-    cout << "Array 2:" << endl;
-    tampilArray(array2);
-    tukarIsiArray(array1, array2, 1, 1);
+    createList(L);
 
-    cout << "\n=== SESUDAH ARRAY DITUKAR (Posisi [1][1]) ===" << endl;
-    cout << "Array 1:" << endl;
-    tampilArray(array1);
-    cout << "Array 2:" << endl;
-    tampilArray(array2);
+    P1 = alokasi(2);
+    insertFirst(L, P1);
 
-    cout << "\n-----------------------------------" << endl;
+    P2 = alokasi(0);
+    insertFirst(L, P2);
 
-    cout << "=== SEBELUM POINTER DITUKAR ===" << endl;
-    cout << "Isi P1 = " << *p1 << ", Isi P2 = " << *p2 << endl;
-    
-    tukarPointer(p1, p2);
+    P3 = alokasi(8);
+    insertFirst(L, P3);
 
-    cout << "\n=== SESUDAH POINTER DITUKAR ===" << endl;
-    cout << "Isi P1 = " << *p1 << ", Isi P2 = " << *p2 << endl;
+    P4 = alokasi(12);
+    insertFirst(L, P4);
+
+    P5 = alokasi(9);
+    insertFirst(L, P5);
+    printInfo(L);
 
     return 0;
 }
 ```
 ### Output Unguided 3 :
-![Screenshot Output Unguided 1_!] (https://github.com/divazhraa/StrukturData_Modul3/blob/main/MODUL03/output/SOAL3.png)
+![Screenshot Output Unguided 1_!] (https://github.com/divazhraa/StrukturData_Modul4/blob/main/Modul04/output/OUTPUT1.png)
 
 
 ### penjelasan unguided 3
-[Program ini menunjukkan cara menukar data menggunakan array dua dimensi dan pointer. Fungsi tukarIsiArray() dibuat untuk menukar isi dari dua buah array (berukuran 3x3) pada posisi baris dan kolom tertentu. Sedangkan fungsi tukarPointer() berguna untuk menukar nilai dari dua variabel secara langsung dengan cara mengakses alamat memorinya menggunakan bantuan tanda bintang (*).]
+[File main.cpp ini membuat sebuah list kosong dengan createList, lalu mengalokasikan lima node berturut-turut dengan nilai 2, 0, 8, 12, dan 9, dan setiap node langsung disisipkan di awal list menggunakan insertFirst. Karena insertFirst selalu menaruh node baru di posisi paling depan, urutan di dalam list menjadi terbalik dari urutan pemasukannya, yaitu node yang terakhir dimasukkan (9) berada di depan dan node yang pertama (2) berada di belakang. Setelah itu printInfo dipanggil untuk menampilkan isi list, sehingga output yang muncul adalah 9 12 8 0 2. Program diakhiri dengan return 0, tetapi memori kelima node belum dibebaskan dengan dealokasi sehingga terjadi memory leak kecil (tidak masalah untuk program latihan sederhana ini, namun sebaiknya diperhatikan pada program yang lebih besar). Agar program berhasil dijalankan, ketiga file harus dikompilasi bersama dengan perintah g++ main.cpp Singlylist.cpp -o program, dan penulisan "Singlylist.h" harus sama persis dengan nama file headernya.]
 
 
 # Kesimpulan
-[Kesimpulan dari praktikum ini adalah pentingnya pemahaman mengenai tipe data bentukan dan modularitas program. Melalui penerapan Abstract Data Type (ADT), kita belajar bahwa memecah kode program menjadi beberapa file terpisah (seperti header .h dan body .cpp) membuat kode jauh lebih rapi, terstruktur, dan mudah untuk dikembangkan. Selain itu, penggunaan struct yang dipadukan dengan array terbukti sangat efektif untuk mengelompokkan dan menyimpan banyak data sekaligus secara efisien. Praktikum ini juga melatih kita dalam memanfaatkan fungsi, prosedur, dan pointer untuk memecah logika yang rumit serta memanipulasi data di dalam memori secara langsung, yang semuanya merupakan bekal penting untuk pengembangan perangkat lunak di dunia nyata.]
+[Kesimpulan dari praktikum ini adalah Praktikum ini membahas implementasi singly linked list dalam C++ dengan pemrograman modular, yaitu dipisah menjadi file header untuk deklarasi, file .cpp untuk implementasi fungsi, dan main.cpp untuk menjalankan program. Program pertama menyimpan data mahasiswa (nama, NIM, umur) dengan operasi lengkap berupa penyisipan di awal, tengah, dan akhir, penghapusan di awal, akhir, dan setelah node tertentu, serta menampilkan, menghitung, dan menghapus seluruh list, sedangkan program kedua menyederhanakannya dengan data int dan operasi dasar seperti createList, alokasi, dealokasi, printInfo, dan insertFirst, yang menghasilkan urutan terbalik (9 12 8 0 2) karena setiap node disisipkan di depan. Dari kedua program dapat disimpulkan bahwa linked list bersifat dinamis karena node dibuat dengan new dan dihapus dengan delete, seluruh operasinya bertumpu pada pengaturan pointer next yang harus teliti agar list tidak terputus dan tidak terjadi memory leak, kasus khusus seperti list kosong dan list satu elemen harus ditangani, serta nama fungsi, signature, dan file harus konsisten dan dikompilasi bersama agar tidak muncul error undefined reference. Pemahaman ini menjadi dasar untuk mempelajari struktur data lanjutan seperti doubly linked list, stack, queue, dan tree.]
 
 
 ### Referensi

@@ -65,7 +65,7 @@ void delFirst(linkedlist &List)
 {
     if (!isEmpty(List))
     {
-        address nodeHapus = List.first; // FIX: deklarasi variabel
+        address nodeHapus = List.first; 
         List.first = List.first->next;
         nodeHapus->next = Nil;
         dealokasi(nodeHapus);
@@ -84,7 +84,7 @@ void delLast(linkedlist &List)
         nodeHapus = List.first;
         if (nodeHapus->next == Nil)
         {
-            List.first = Nil; // FIX: first harus jadi Nil
+            List.first = Nil;
             dealokasi(nodeHapus);
         }
         else
@@ -104,7 +104,6 @@ void delLast(linkedlist &List)
     }
 }
 
-// Signature sesuai list.h (3 parameter)
 void delAfter(linkedlist &List, address nodeHapus, address nodePrev)
 {
     if (isEmpty(List))
@@ -116,7 +115,7 @@ void delAfter(linkedlist &List, address nodeHapus, address nodePrev)
         if (nodePrev != Nil && nodePrev->next != Nil)
         {
             nodeHapus = nodePrev->next;
-            nodePrev->next = nodeHapus->next; // FIX: sambungkan ke node berikutnya
+            nodePrev->next = nodeHapus->next; 
             nodeHapus->next = Nil;
             dealokasi(nodeHapus);
         }
@@ -159,7 +158,7 @@ int nbList(linkedlist List)
 }
 
 void deleteList(linkedlist &List)
-{ // FIX: nama sesuai header (deleteList)
+{ 
     address nodeBantu = List.first;
     while (nodeBantu != Nil)
     {

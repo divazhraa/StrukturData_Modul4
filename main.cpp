@@ -24,16 +24,16 @@ int main()
     cout << "jumlah node : " << nbList(List) << endl;
     cout << endl;
 
-    delFirst(List);             // hapus Dhimas
-    delLast(List);              // hapus Joshua
-    delAfter(List, Nil, nodeC); // hapus node setelah Rizal (Satrio)
+    delFirst(List);             
+    delLast(List);              
+    delAfter(List, Nil, nodeC); 
 
     cout << "--- ISI LIST SETELAH DILAKUKAN DELETE ---" << endl;
     printList(List);
     cout << "jumlah node : " << nbList(List) << endl;
     cout << endl;
 
-    deleteList(List); // bebaskan sisa memori
+    deleteList(List); 
     cout << "jumlah node : " << nbList(List) << endl;
 
     return 0;
