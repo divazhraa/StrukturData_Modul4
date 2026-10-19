@@ -1,11 +1,22 @@
-# <h1 align="center">Laporan Praktikum Modul 4 -SINGLY LINKED LIST (BAGIAN PERTAMA)- ... </h1>
+# <h1 align="center">Laporan Praktikum Modul 4 - SINGLY LINKED LIST (BAGIAN PERTAMA)- ... </h1>
 <p align="center">[Diva Zahrah Nabila] - [109082500112]</p>
 
 ## Unguided 
 
+# Dasar Teori
+## A.	Abstract Data Type (ADT)
+###     Abstract Data Type (ADT) adalah definisi statik yang mencakup sebuah tipe data (TYPE) beserta sekumpulan operasi dasar atau primitif yang dapat memanipulasi tipe data tersebut. ADT yang terstruktur dan lengkap biasanya juga menyertakan definisi invarian dari tipe dan aksioma-aksioma terkait. Sebuah definisi ADT dapat bersifat kompleks, artinya di dalamnya dapat memuat definisi dari ADT lain (contohnya, ADT SEGI4 dapat dibentuk dari dua buah ADT POINT).
+
+## B.	Implementasi Modular pada ADT
+###     Dalam standar software engineering, ADT diimplementasikan menggunakan arsitektur modular yang memecah program menjadi tiga file utama, yaitu:
+###     1. Berkas Header (.h): Memuat deklarasi atau spesifikasi tipe struct serta bentuk prototipe (header) dari primitif (fungsi dan prosedur) tanpa menjabarkan isi prosesnya.   
+###     2. Berkas Body/Realisasi (.cpp): Memuat implementasi kode murni (body) dari primitif fungsi/prosedur yang telah dideklarasikan di bagian header.   
+###     3. Berkas Program Utama/Driver (main.cpp): Merupakan antarmuka utama program yang dipanggil oleh sistem (memuat fungsi int main()) untuk menggunakan tipe data bentukan tersebut.
+
+
+
 # GUIDED 1
-### list.h
-### Source code: 
+### list.h: 
 
 ```cpp
 #ifndef List_h
@@ -49,13 +60,10 @@ void deleteList(linkedlist &List);
 #endif
 ``` 
 
-### Penjelasan: File header ini berisi deklarasi struktur data dan daftar fungsi yang dipakai program. Struct mahasiswa menyimpan data nama, NIM, dan umur, lalu node membungkus data tersebut bersama pointer next yang menunjuk ke node berikutnya. Struct linkedlist hanya berisi pointer first sebagai penunjuk node pertama. Nil didefinisikan sebagai NULL agar penulisan pointer kosong lebih mudah dibaca. Bagian #ifndef ... #endif mencegah header terbaca dua kali saat kompilasi.
+### Penjelasan: list.h File header ini berisi deklarasi struktur data dan daftar fungsi yang dipakai program. Struct mahasiswa menyimpan data nama, NIM, dan umur, lalu node membungkus data tersebut bersama pointer next yang menunjuk ke node berikutnya. Struct linkedlist hanya berisi pointer first sebagai penunjuk node pertama. Nil didefinisikan sebagai NULL agar penulisan pointer kosong lebih mudah dibaca. Bagian #ifndef ... #endif mencegah header terbaca dua kali saat kompilasi.
 
 
-
-### List.cpp
-### Source code: 
-
+### list.cpp
 ```cpp
 #include "list.h"
 #include <iostream>
@@ -245,9 +253,7 @@ int main(){
 ### Penjelasan: File list.cpp berisi implementasi semua operasi pada linked list. Fungsi isEmpty dan createList memeriksa dan menginisialisasi list kosong, sedangkan alokasi membuat node baru dengan new dan dealokasi menghapusnya dengan delete. Untuk penyisipan, insertFirst, insertAfter, dan insertLast menambahkan node di awal, setelah node tertentu, dan di akhir list dengan mengatur ulang pointer next. Untuk penghapusan, delFirst, delLast, dan delAfter melepas node dari awal, akhir, atau setelah node tertentu lalu membebaskan memorinya, dengan menyambungkan kembali pointer agar sisa list tidak terputus. Terakhir, printList menampilkan seluruh isi list, nbList menghitung jumlah node, dan deleteList menghapus semua node hingga list kembali kosong.
 
 
-### main.cpp
-### Source code: 
-
+### main.cpp:
 ```cpp
 #include "list.h"
 using namespace std;
@@ -290,8 +296,8 @@ int main()
     return 0;
 }
 ```
-
 ### Penjelasan: Program utama membuat sebuah list kosong, lalu mengalokasikan lima node mahasiswa (Dhimas, Arvin, Rizal, Satrio, Joshua). Kelima node dimasukkan ke list menggunakan kombinasi insertFirst, insertLast, dan insertAfter, sehingga urutannya menjadi Dhimas, Rizal, Satrio, Arvin, Joshua. Isi list dan jumlah node dicetak untuk memastikan proses insert berhasil. Setelah itu program menjalankan delFirst, delLast, dan delAfter untuk menghapus node tertentu, mencetak ulang isi list, dan terakhir memanggil deleteList untuk membebaskan seluruh memori yang tersisa sebelum program selesai.
+
 
 
 # Unguided
@@ -327,7 +333,7 @@ void insertFirst(List &L, address P);
 #endif 
 ```
 
-### penjelasan singlylist.h 
+### penjelasan 
 [File singlylist.h mendefinisikan struktur singly linked list sederhana yang setiap node-nya menyimpan satu data bertipe int (lewat alias infotype), dengan address sebagai pointer ke node ElmList yang berisi info dan pointer next, serta struct List yang hanya menyimpan pointer First sebagai penunjuk node pertama. Nil dipakai sebagai penanda pointer kosong, dan #ifndef ... #endif mencegah header terbaca dua kali. Header ini mendeklarasikan lima fungsi: createList untuk membuat list kosong, alokasi untuk membuat node baru, dealokasi untuk menghapus node dari memori, printInfo untuk menampilkan isi list, dan insertFirst untuk menyisipkan node di awal list. Karena hanya berisi deklarasi, header ini perlu dilengkapi file .cpp yang berisi definisi fungsinya, lalu dikompilasi bersama.]
 
 
@@ -344,7 +350,8 @@ void createList(List &L){
 
 address alokasi(infotype x){
     address P = new ElmList;
-    if (P != Nil){
+    if (P != Nil)
+    {
         P->info = x;
         P->next = Nil;
     }
@@ -358,7 +365,8 @@ void dealokasi(address &P){
 
 void printInfo(List L){
     address P = L.First;
-    while (P != Nil){
+    while (P != Nil)
+    {
         cout << P->info << " ";
         P = P->next;
     }
@@ -366,15 +374,19 @@ void printInfo(List L){
 }
 
 void insertFirst(List &L, address P){
-    if (P != Nil){
+    if (P != Nil)
+    {
         P->next = L.First;
         L.First = P;
     }
 }
 ```
 
-### penjelasan Singlylist.cpp
+
+### penjelasan
 [File singlylist.cpp ini berisi implementasi dari lima fungsi yang dideklarasikan di header. createList menginisialisasi list kosong dengan mengisi First dengan Nil, sedangkan alokasi membuat node baru menggunakan new, lalu mengisi info dengan nilai x dan next dengan Nil setelah memastikan alokasi berhasil (pointer tidak Nil). dealokasi membebaskan memori node dengan delete dan mengosongkan pointernya agar tidak menjadi dangling pointer. printInfo menelusuri list dari First sampai akhir sambil mencetak setiap info dipisahkan spasi, lalu mencetak baris baru (jika list kosong, hanya baris kosong yang tampil). Terakhir, insertFirst menyisipkan node di awal list dengan membuat next node baru menunjuk ke First lama, lalu menjadikan node tersebut sebagai First, dan hanya dijalankan jika node yang diberikan tidak Nil. Satu hal yang perlu diperhatikan: file ini meng-include "Singlylist.h" (huruf S besar), sehingga nama file headernya harus persis sama. Di Windows hal ini biasanya tidak bermasalah, tetapi di Linux atau macOS akan menimbulkan error No such file or directory jika nama filenya singlylist.h.]
+
+
 
 ### 3. Singlylist main.cpp
 
@@ -409,16 +421,16 @@ int main()
     return 0;
 }
 ```
-### Output Unguided 3 :
+### Output :
 ![Screenshot Output Unguided 1_!] (https://github.com/divazhraa/StrukturData_Modul4/blob/main/Modul04/output/OUTPUT1.png)
 
 
-### penjelasan unguided 3
+### penjelasan
 [File main.cpp ini membuat sebuah list kosong dengan createList, lalu mengalokasikan lima node berturut-turut dengan nilai 2, 0, 8, 12, dan 9, dan setiap node langsung disisipkan di awal list menggunakan insertFirst. Karena insertFirst selalu menaruh node baru di posisi paling depan, urutan di dalam list menjadi terbalik dari urutan pemasukannya, yaitu node yang terakhir dimasukkan (9) berada di depan dan node yang pertama (2) berada di belakang. Setelah itu printInfo dipanggil untuk menampilkan isi list, sehingga output yang muncul adalah 9 12 8 0 2. Program diakhiri dengan return 0, tetapi memori kelima node belum dibebaskan dengan dealokasi sehingga terjadi memory leak kecil (tidak masalah untuk program latihan sederhana ini, namun sebaiknya diperhatikan pada program yang lebih besar). Agar program berhasil dijalankan, ketiga file harus dikompilasi bersama dengan perintah g++ main.cpp Singlylist.cpp -o program, dan penulisan "Singlylist.h" harus sama persis dengan nama file headernya.]
 
 
 # Kesimpulan
-[Kesimpulan dari praktikum ini adalah Praktikum ini membahas implementasi singly linked list dalam C++ dengan pemrograman modular, yaitu dipisah menjadi file header untuk deklarasi, file .cpp untuk implementasi fungsi, dan main.cpp untuk menjalankan program. Program pertama menyimpan data mahasiswa (nama, NIM, umur) dengan operasi lengkap berupa penyisipan di awal, tengah, dan akhir, penghapusan di awal, akhir, dan setelah node tertentu, serta menampilkan, menghitung, dan menghapus seluruh list, sedangkan program kedua menyederhanakannya dengan data int dan operasi dasar seperti createList, alokasi, dealokasi, printInfo, dan insertFirst, yang menghasilkan urutan terbalik (9 12 8 0 2) karena setiap node disisipkan di depan. Dari kedua program dapat disimpulkan bahwa linked list bersifat dinamis karena node dibuat dengan new dan dihapus dengan delete, seluruh operasinya bertumpu pada pengaturan pointer next yang harus teliti agar list tidak terputus dan tidak terjadi memory leak, kasus khusus seperti list kosong dan list satu elemen harus ditangani, serta nama fungsi, signature, dan file harus konsisten dan dikompilasi bersama agar tidak muncul error undefined reference. Pemahaman ini menjadi dasar untuk mempelajari struktur data lanjutan seperti doubly linked list, stack, queue, dan tree.]
+[Kesimpulan dari praktikum ini adalah Praktikum ini membahas implementasi singly linked list dalam C++ dengan pemrograman modular, yaitu dipisah menjadi file header untuk deklarasi, file .cpp untuk implementasi fungsi, dan main.cpp untuk menjalankan program. Program pertama menyimpan data mahasiswa (nama, NIM, umur) dengan operasi lengkap berupa penyisipan di awal, tengah, dan akhir, penghapusan di awal, akhir, dan setelah node tertentu, serta menampilkan, menghitung, dan menghapus seluruh list, sedangkan program kedua menyederhanakannya dengan data int dan operasi dasar seperti createList, alokasi, dealokasi, printInfo, dan insertFirst, yang menghasilkan urutan terbalik (9 12 8 0 2) karena setiap node disisipkan di depan. Dari kedua program dapat disimpulkan bahwa linked list bersifat dinamis karena node dibuat dengan new dan dihapus dengan delete, seluruh operasinya bertumpu pada pengaturan pointer next yang harus teliti agar list tidak terputus dan tidak terjadi memory leak, kasus khusus seperti list kosong dan list satu elemen harus ditangani, serta nama fungsi, signature, dan file harus konsisten dan dikompilasi bersama agar tidak muncul error undefined reference. Pemahaman ini menjadi dasar untuk mempelajari struktur data lanjutan seperti doubly linked list, stack, queue, dan tree. ]
 
 
 ### Referensi
